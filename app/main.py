@@ -5,7 +5,7 @@ from fastapi.exceptions import RequestValidationError
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 
-from app.routers import auth, users, registration, profile, addresses, categories
+from app.routers import auth, users, registration, profile, addresses, categories, brands
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(name)s: %(message)s")
 
@@ -44,6 +44,7 @@ routers = [
     profile.router,
     addresses.router,
     categories.router,
+    brands.router,
 ]
 for r in routers:
     app.include_router(r)
