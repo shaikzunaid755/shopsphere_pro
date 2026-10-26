@@ -5,7 +5,7 @@ from fastapi.exceptions import RequestValidationError
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 
-from app.routers import auth, users
+from app.routers import auth, users, registration
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(name)s: %(message)s")
 
@@ -40,6 +40,7 @@ async def value_error(request: Request, exc: ValueError):
 routers = [
     auth.router,
     users.router,
+    registration.router,
 ]
 for r in routers:
     app.include_router(r)
