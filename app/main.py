@@ -5,7 +5,7 @@ from fastapi.exceptions import RequestValidationError
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 
-from app.routers import auth, users, registration, profile, addresses, categories, brands, products, variants, product_files, attributes, pricing, inventory, warehouses, transfers, low_stock, cart, wishlist, coupons
+from app.routers import auth, users, registration, profile, addresses, categories, brands, products, variants, product_files, attributes, pricing, inventory, warehouses, transfers, low_stock, cart, wishlist, coupons, promotions
 app = FastAPI(
     title="ShopSphere Pro API",
     description="E-commerce backend - FastAPI + MySQL + SQLAlchemy. 50 modules, JWT auth and role based access.",
@@ -55,6 +55,7 @@ routers = [
     cart.calc_router,
     wishlist.router,
     coupons.router,
+    promotions.router,
 ]
 for r in routers:
     app.include_router(r)

@@ -64,3 +64,63 @@ class CouponOut(ORMModel):
     valid_from: datetime
     valid_to: datetime
     is_active: bool
+
+# ---------- promotions ----------
+class PromotionCreate(BaseModel):
+    name: str = Field(min_length=2, max_length=120)
+    description: Optional[str] = None
+    promo_type: str                      # product or category
+    product_id: Optional[int] = None
+    category_id: Optional[int] = None
+    discount_type: str
+    discount_value: Decimal = Field(gt=0)
+    min_quantity: int = Field(default=1, ge=1)
+    min_order_amount: Decimal = Field(default=0, ge=0)
+    start_date: datetime
+    end_date: datetime
+
+    @model_validator(mode="after")
+    def check(self):
+        _check_discount(self.discount_type, self.discount_value)
+        if self.promo_type not in ("product", "category"):
+            raise ValueError("promo_type must be product or category")
+        if self.promo_type == "product" and not self.product_id:
+            raise ValueError("product promotion needs product_id")
+        if self.promo_type == "category" and not self.category_id:
+            raise ValueError("category promotion needs category_id")
+        if self.end_date <= self.start_date:
+            raise ValueError("end_date must be after start_date")
+        return self
+
+class PromotionUpdate(BaseModel):
+    name: Optional[str] = None
+    description: Optional[str] = None
+    discount_value: Optional[Decimal] = Field(default=None, gt=0)
+    min_quantity: Optional[int] = Field(default=None, ge=1)
+    min_order_amount: Optional[Decimal] = Field(default=None, ge=0)
+    start_date: Optional[datetime] = None
+    end_date: Optional[datetime] = None
+
+
+class PromotionHistoryOut(ORMModel):
+    id: int
+    promotion_id: int
+    action: str
+    details: Optional[str] = None
+    changed_by: Optional[int] = None
+    created_at: datetime
+
+class PromotionOut(ORMModel):
+    id: int
+    name: str
+    description: Optional[str] = None
+    promo_type: str
+    product_id: Optional[int] = None
+    category_id: Optional[int] = None
+    discount_type: str
+    discount_value: Decimal
+    min_quantity: int
+    min_order_amount: Decimal
+    start_date: datetime
+    end_date: datetime
+    is_active: bool
