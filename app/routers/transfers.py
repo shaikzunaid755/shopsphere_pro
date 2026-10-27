@@ -114,7 +114,8 @@ def receive(transfer_id: int, data: TransferReceive, db: Session = Depends(get_d
     audit(db, user, "transfer_received", "transfer", t.id, {"status": "dispatched"}, {"status": "received"})
     db.commit()
     db.refresh(t)
-    return t
+
+
 @router.post("/{transfer_id}/cancel", response_model=TransferOut)
 def cancel(transfer_id: int, db: Session = Depends(get_db), user: User = Depends(stock_roles)):
     t = get_or_404(db, InventoryTransfer, transfer_id, "Transfer")
