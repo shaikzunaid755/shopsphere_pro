@@ -124,3 +124,47 @@ class PromotionOut(ORMModel):
     start_date: datetime
     end_date: datetime
     is_active: bool
+# ---------- tax ----------
+class TaxRuleCreate(BaseModel):
+    name: str = Field(min_length=2, max_length=80)
+    rate: Decimal = Field(ge=0, le=100)
+    product_id: Optional[int] = None
+    category_id: Optional[int] = None
+
+    @model_validator(mode="after")
+    def check(self):
+        # swagger example sends 0 for both, treat as "not set"
+        self.product_id = self.product_id or None
+        self.category_id = self.category_id or None
+        if self.product_id and self.category_id:
+            raise ValueError("A tax rule is for a product OR a category, not both")
+        return self
+
+
+class TaxRuleUpdate(BaseModel):
+    name: Optional[str] = None
+    rate: Optional[Decimal] = Field(default=None, ge=0, le=100)
+    is_active: Optional[bool] = None
+
+class TaxRuleOut(ORMModel):
+    id: int
+    name: str
+    rate: Decimal
+    product_id: Optional[int] = None
+    category_id: Optional[int] = None
+    is_active: bool
+
+
+class TaxHistoryOut(ORMModel):
+    id: int
+    tax_rule_id: int
+    action: str
+    old_rate: Optional[Decimal] = None
+    new_rate: Optional[Decimal] = None
+    changed_by: Optional[int] = None
+    created_at: datetime
+
+
+class TaxCalcRequest(BaseModel):
+    product_id: int
+    amount: Decimal = Field(gt=0)
