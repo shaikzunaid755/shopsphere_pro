@@ -168,3 +168,49 @@ class TaxHistoryOut(ORMModel):
 class TaxCalcRequest(BaseModel):
     product_id: int
     amount: Decimal = Field(gt=0)
+
+# ---------- shipping ----------
+class ShippingMethodCreate(BaseModel):
+    name: str = Field(min_length=2, max_length=80)
+    code: str = Field(min_length=2, max_length=30)
+    description: Optional[str] = None
+    base_charge: Decimal = Field(default=0, ge=0)
+    per_item_charge: Decimal = Field(default=0, ge=0)
+    free_above: Optional[Decimal] = Field(default=None, ge=0)
+    min_order_amount: Decimal = Field(default=0, ge=0)
+    max_order_amount: Optional[Decimal] = Field(default=None, gt=0)
+    allowed_states: Optional[str] = None      # "Telangana,Karnataka", empty = all
+    cod_supported: bool = True
+    estimated_days: int = Field(default=5, ge=0)
+
+class ShippingMethodUpdate(BaseModel):
+    name: Optional[str] = None
+    description: Optional[str] = None
+    base_charge: Optional[Decimal] = Field(default=None, ge=0)
+    per_item_charge: Optional[Decimal] = Field(default=None, ge=0)
+    free_above: Optional[Decimal] = None
+    min_order_amount: Optional[Decimal] = None
+    max_order_amount: Optional[Decimal] = None
+    allowed_states: Optional[str] = None
+    cod_supported: Optional[bool] = None
+    estimated_days: Optional[int] = None
+
+
+class ShippingMethodOut(ShippingMethodCreate):
+    # same fields as create, plus id and status
+    model_config = {"from_attributes": True}
+    id: int
+    is_active: bool
+
+class ShippingQuoteRequest(BaseModel):
+    order_amount: Decimal = Field(ge=0)
+    item_count: int = Field(default=1, gt=0)
+    state: Optional[str] = None
+    cod: bool = False
+
+
+class ShippingQuote(BaseModel):
+    method_id: int
+    name: str
+    charge: Decimal
+    estimated_days: int
