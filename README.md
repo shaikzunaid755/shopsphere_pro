@@ -40,7 +40,7 @@ postman/       Postman collection
 Needs Python 3.11+ and MySQL 8.
 
 ```powershell
-git clone https://github.com/<your-username>/shopsphere_pro.git
+git clone https://github.com/shaikzunaid755/shopsphere_pro.git
 cd shopsphere_pro
 python -m venv venv
 .\venv\Scripts\Activate.ps1
