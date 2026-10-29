@@ -1,11 +1,11 @@
-import logging
+﻿import logging
 
 from fastapi import FastAPI, Request
 from fastapi.exceptions import RequestValidationError
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 
-from app.routers import auth, users, registration, profile, addresses, categories, brands, products, variants, product_files, attributes, pricing, inventory, warehouses, transfers, low_stock, cart, wishlist, coupons, promotions, tax, shipping_config, orders, checkout, cancellations
+from app.routers import auth, users, registration, profile, addresses, categories, brands, products, variants, product_files, attributes, pricing, inventory, warehouses, transfers, low_stock, cart, wishlist, coupons, promotions, tax, shipping_config, orders, checkout, cancellations, payments, refunds, cod, shipments, tracking, deliveries, returns, exchanges, reviews, questions, tickets, notifications, messaging, suppliers, purchase_orders, supplier_invoices, analytics, jobs
 app = FastAPI(
     title="ShopSphere Pro API",
     description="E-commerce backend - FastAPI + MySQL + SQLAlchemy. 50 modules, JWT auth and role based access.",
@@ -63,6 +63,27 @@ routers = [
     orders.items_router,
     orders.status_router,
     cancellations.router,
+    payments.router,
+    payments.history_router,
+    refunds.router,
+    cod.router,
+    shipments.router,
+    tracking.router,
+    deliveries.router,
+    returns.router,
+    exchanges.router,
+    reviews.router,
+    questions.router,
+    tickets.router,
+    notifications.router,
+    messaging.router,
+    suppliers.router,
+    purchase_orders.router,
+    supplier_invoices.router,
+    analytics.audit_router,
+    analytics.dashboard_router,
+    analytics.reports_router,
+    jobs.router,
 ]
 for r in routers:
     app.include_router(r)

@@ -1,11 +1,20 @@
+# secrets
+.env
+
+# python
 venv/
+.venv/
 __pycache__/
 *.pyc
-.env
 .pytest_cache/
-uploads/*
-!uploads/.gitkeep
-exports/*
-!exports/.gitkeep
-test.db
+
+# local data / generated files
+test_shopsphere.db
+*.db
+exports/
+uploads/
+*.log
+
+# editors
 .vscode/
+.idea/
